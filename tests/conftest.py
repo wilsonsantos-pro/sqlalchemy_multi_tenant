@@ -10,7 +10,7 @@ from pydantic import EmailStr
 from sqlalchemy_multi_tenant import config
 from sqlalchemy_multi_tenant.auth import create_access_token
 from sqlalchemy_multi_tenant.core.orm.mapper import start_orm_mappers
-from sqlalchemy_multi_tenant.db.session import dbsession_ctx, get_engine
+from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx, get_engine
 from sqlalchemy_multi_tenant.main import main
 from sqlalchemy_multi_tenant.users.init_db import init_db
 

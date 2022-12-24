@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from sqlalchemy_multi_tenant.config import settings
 from sqlalchemy_multi_tenant.core.orm import start_orm_mappers
-from sqlalchemy_multi_tenant.db.session import dbsession_ctx
+from sqlalchemy_multi_tenant.core.db import dbsession_ctx
 from sqlalchemy_multi_tenant.users import crud_user as crud
 from sqlalchemy_multi_tenant.users.adapters import UserCreate
 
