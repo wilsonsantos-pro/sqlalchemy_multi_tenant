@@ -7,10 +7,6 @@ from sqlalchemy_multi_tenant.core.db import dbsession_ctx
 from sqlalchemy_multi_tenant.users import crud_user as crud
 from sqlalchemy_multi_tenant.users.adapters import UserCreate
 
-# make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
-# otherwise, SQL Alchemy might fail to initialize relationships properly
-# for more details: https://github.com/tiangolo/full-stack-fastapi-postgresql/issues/28
-
 
 def init_db(dbsession: Session) -> None:
     # Tables should be created with Alembic migrations

@@ -45,9 +45,6 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def authenticate(
         self, dbsession: Session, *, email: str, password: str
     ) -> Optional[User]:
-        from sqlalchemy_multi_tenant import config
-
-        assert config.settings.SQLALCHEMY_DATABASE_URI == "sqlite:///test.db"
         user = self.get_by_email(dbsession, email=email)
         if not user:
             return None
