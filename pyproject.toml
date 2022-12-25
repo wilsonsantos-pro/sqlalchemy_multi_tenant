@@ -8,12 +8,12 @@ authors = ["Wilson Santos <wilson.santos.dev87@gmail.com>"]
 python = "^3.8,<3.12"
 SQLAlchemy = "^1.4.45"
 fastapi = "^0.88.0"
-uvicorn = {extras = ["standard"], version = "^0.20.0"}
+uvicorn = { extras = ["standard"], version = "^0.20.0" }
 alembic = "^1.9.0"
 python-jose = "^3.3.0"
-passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 python-multipart = "^0.0.5"
-pydantic = {extras = ["email", "dotenv"], version = "^1.10.2"}
+pydantic = { extras = ["email", "dotenv"], version = "^1.10.2" }
 python-dotenv = "^0.21.0"
 
 [tool.poetry.dev-dependencies]
@@ -35,11 +35,14 @@ extension-pkg-allow-list = ["pydantic"]
 
 [tool.pylint.'MESSAGES CONTROL']
 disable = [
-    'missing-module-docstring',
-    'missing-class-docstring',
-    'missing-function-docstring',
-    'too-few-public-methods'
- ]
+  'missing-module-docstring',
+  'missing-class-docstring',
+  'missing-function-docstring',
+  'too-few-public-methods',
+]
+
+[tool.pylint.'IMPORTS']
+known-third-party = ["alembic"]
 
 [tool.poetry.scripts]
 init_db = "sqlalchemy_multi_tenant.users.init_db:main"

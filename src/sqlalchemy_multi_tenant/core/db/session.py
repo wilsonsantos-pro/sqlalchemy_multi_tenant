@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 @lru_cache()
 def get_engine() -> Engine:
+    # pylint: disable=import-outside-toplevel
     # local import so that settings can be overriden
     from sqlalchemy_multi_tenant.config import settings
 

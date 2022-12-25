@@ -45,6 +45,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def authenticate(
         self, dbsession: Session, *, email: str, password: str
     ) -> Optional[User]:
+        # pylint: disable=redefined-outer-name
         user = self.get_by_email(dbsession, email=email)
         if not user:
             return None

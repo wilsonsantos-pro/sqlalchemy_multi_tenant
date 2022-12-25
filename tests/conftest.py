@@ -1,4 +1,4 @@
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name,unused-argument
 from typing import Dict, Generator
 
 import pytest
@@ -9,8 +9,8 @@ from pydantic import EmailStr
 
 from sqlalchemy_multi_tenant import config
 from sqlalchemy_multi_tenant.auth import create_access_token
-from sqlalchemy_multi_tenant.core.orm.mapper import start_orm_mappers
 from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx, get_engine
+from sqlalchemy_multi_tenant.core.orm.mapper import start_orm_mappers
 from sqlalchemy_multi_tenant.main import main
 from sqlalchemy_multi_tenant.users.init_db import init_db
 
@@ -48,7 +48,9 @@ def test_init_db() -> None:
         init_db(_dbsession)
 
 
-def pytest_sessionstart(session: pytest.Session) -> None:
+def pytest_sessionstart(
+    session: pytest.Session,  # pylint: disable=unused-argument
+) -> None:
     test_settings = config.Settings(_env_file=".env.test")
     setattr(config, "settings", test_settings)
     setattr(config, "settings", test_settings)

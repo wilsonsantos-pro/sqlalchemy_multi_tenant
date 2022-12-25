@@ -6,7 +6,13 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from sqlalchemy_multi_tenant.config import settings
+
+# pylint: disable=unused-import
+# just import so that alembic detects the changes
+from sqlalchemy_multi_tenant.core.orm.mapper import start_orm_mappers
 from sqlalchemy_multi_tenant.core.orm.registry import mapper_registry
+
+# pylint: enable=unused-import
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
