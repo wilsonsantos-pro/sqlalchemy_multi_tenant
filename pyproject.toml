@@ -5,7 +5,7 @@ description = ""
 authors = ["Wilson Santos <wilson.santos.dev87@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8,<3.12"
 SQLAlchemy = "^1.4.45"
 fastapi = "^0.88.0"
 uvicorn = {extras = ["standard"], version = "^0.20.0"}
@@ -23,6 +23,8 @@ pylint = "^2.15.8"
 pytest = "^7.2.0"
 httpx = "^0.23.1"
 pytest-watch = "^4.2.0"
+pytest-testmon = "^1.4.2"
+pytest-cov = "^4.0.0"
 
 [tool.isort]
 profile = "black"

@@ -55,14 +55,23 @@ upload:
 ################
 .PHONY: test
 test:
-	poetry run pytest
+	@echo "--------------"
+	@echo "- 🧪 Test 🧪 -"
+	@echo "--------------"
+	@poetry run pytest
+.PHONY: test-monitor
+test-monitor:
+	@echo "----------------------"
+	@echo "- 🧪 Test Monitor 🧪 -"
+	@echo "----------------------"
+	@poetry run ptw -- --testmon
 .PHONY: coverage
 coverage:
 	@echo "-----------------------"
 	@echo "- 🧪 Test Coverage 🧪 -"
 	@echo "-----------------------"
-	poetry run pytest \
-		--cov=src/kalimera/ \
+	@poetry run pytest \
+		--cov=src/ \
 		--cov-report term-missing:skip-covered \
 		--cov-report html
 
