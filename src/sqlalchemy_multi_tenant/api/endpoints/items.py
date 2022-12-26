@@ -1,10 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from sqlalchemy_multi_tenant.items import crud_items as crud
-from sqlalchemy_multi_tenant.items.adapters import ItemCreate
+from sqlalchemy_multi_tenant.items.adapters import ItemCreate, ItemUpdate
 from sqlalchemy_multi_tenant.items.models import Item
 from sqlalchemy_multi_tenant.users.models import User
 
@@ -45,4 +45,43 @@ def create_item(
     item = crud.items.create_with_owner(
         dbsession=dbsession, obj_in=item_in, owner_id=current_user.id
     )
+    return item
+
+
+@router.put("/{item_id}", response_model=Item)
+def update_item(
+    *,
+    dbsession: Session = Depends(get_db),
+    item_id: int,
+    item_in: ItemUpdate,
+    current_user: User = Depends(get_current_active_user),
+) -> Item:
+    """
+    Update an item.
+    """
+    item = crud.items.get(dbsession=dbsession, obj_id=item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    if not current_user.is_superuser and (item.owner_id != current_user.id):
+        raise HTTPException(status_code=400, detail="Not enough permissions")
+    item = crud.items.update(dbsession=dbsession, db_obj=item, obj_in=item_in)
+    return item
+
+
+@router.delete("/{item_id}", response_model=Item)
+def delete_item(
+    *,
+    dbsession: Session = Depends(get_db),
+    item_id: int,
+    current_user: User = Depends(get_current_active_user),
+) -> Item:
+    """
+    Delete an item.
+    """
+    item = crud.items.get(dbsession=dbsession, obj_id=item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    if not current_user.is_superuser and (item.owner_id != current_user.id):
+        raise HTTPException(status_code=400, detail="Not enough permissions")
+    item = crud.items.remove(dbsession=dbsession, obj_id=item_id)
     return item

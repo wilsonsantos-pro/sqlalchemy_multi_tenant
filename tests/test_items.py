@@ -3,8 +3,9 @@ from typing import TYPE_CHECKING, Generator
 
 import pytest
 
+from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx
 from sqlalchemy_multi_tenant.items import crud_items as crud
-from sqlalchemy_multi_tenant.items.adapters import ItemCreate
+from sqlalchemy_multi_tenant.items.adapters import ItemCreate, ItemUpdate
 from sqlalchemy_multi_tenant.items.models import Item
 from sqlalchemy_multi_tenant.users.models import User
 
@@ -46,3 +47,20 @@ def test_create_items(client: "TestClient", headers):
     assert response.status_code == 200, response.json()
     result = response.json()
     assert result["title"] == item_in.title
+
+
+def test_update_items(client: "TestClient", headers, test_item):
+    item_in = ItemUpdate(title="New title", description="New description")
+    response = client.put(
+        f"/api/items/{test_item.id}", headers=headers, json=item_in.dict()
+    )
+    assert response.status_code == 200, response.json()
+    result = response.json()
+    assert result["title"] == item_in.title
+    assert result["description"] == item_in.description
+
+
+def test_delete_items(client: "TestClient", headers, test_item):
+    item_id = test_item.id
+    response = client.delete(f"/api/items/{item_id}", headers=headers)
+    assert response.status_code == 200, response.json()

@@ -8,5 +8,5 @@ class ItemCreate(BaseModel):
     description: Optional[str]
 
 
-class ItemUpdate(BaseModel):
+class ItemUpdate(ItemCreate):
     pass
