@@ -12,14 +12,17 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
     FIRST_SUPERUSER: EmailStr = EmailStr("admin@admin.com")
     FIRST_SUPERUSER_PASSWORD: str = "admin@admin.com"
+    MULTI_TENANT_ENABLED: bool = False
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(
-        cls, value: Optional[str], values: Dict[str, Any]
+    def assemble_db_connection(  # pylint: disable=no-self-argument
+        cls,
+        value: Optional[str],
+        values: Dict[str, Any],
     ) -> Any:
         if isinstance(value, str):
             return value

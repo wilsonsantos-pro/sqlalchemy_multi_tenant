@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:12
+    environment:
+      - POSTGRES_USER=wsp
+      - POSTGRES_PASSWORD=abc123
+      - PGDATA=/pgtmpfs
+    ports:
+      - '54321:5432'
+    volumes:
+      - pgdata_vol:/pgtmpfs
+
+volumes:
+  pgdata_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs

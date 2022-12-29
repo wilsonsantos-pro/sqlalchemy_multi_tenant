@@ -6,13 +6,18 @@ from alembic import command
 from alembic import config as alembic_config
 from fastapi.testclient import TestClient
 from pydantic import EmailStr
+from sqlalchemy_utils import create_database, database_exists, drop_database
 
 from sqlalchemy_multi_tenant import config
 from sqlalchemy_multi_tenant.auth import create_access_token
-from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx, get_engine
+from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx_for_tenant, get_engine
 from sqlalchemy_multi_tenant.core.orm.mapper import start_orm_mappers
 from sqlalchemy_multi_tenant.main import main
 from sqlalchemy_multi_tenant.users.init_db import init_db
+
+pytest_plugins = [
+    "tests.fixtures.fixtures_multi_tenant",
+]
 
 
 @pytest.fixture(scope="session")
@@ -34,23 +39,30 @@ def headers(user_email: EmailStr) -> Dict[str, str]:
 
 @pytest.fixture
 def dbsession() -> Generator:
-    with dbsession_ctx() as _dbsession:
+    with dbsession_ctx_for_tenant() as _dbsession:
         yield _dbsession
 
 
+@pytest.fixture(scope="session")
+def test_database_exists() -> Generator:
+    if not database_exists(get_engine().url):
+        create_database(get_engine().url)
+    yield
+    drop_database(get_engine().url)
+
+
 @pytest.fixture(autouse=True, scope="session")
-def test_init_db() -> None:
+def test_init_db(test_database_exists) -> None:
     alembic_cfg = alembic_config.Config("alembic.ini")
     with get_engine().begin():
         command.upgrade(alembic_cfg, "head")
     start_orm_mappers()
-    with dbsession_ctx() as _dbsession:
+    with dbsession_ctx_for_tenant() as _dbsession:
         init_db(_dbsession)
 
 
-def pytest_sessionstart(
-    session: pytest.Session,  # pylint: disable=unused-argument
-) -> None:
+@pytest.fixture(scope="session", autouse=True)
+def settings():
     test_settings = config.Settings(_env_file=".env.test")
     setattr(config, "settings", test_settings)
-    setattr(config, "settings", test_settings)
+    yield test_settings

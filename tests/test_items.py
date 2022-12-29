@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, Generator
 
 import pytest
 
-from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx
 from sqlalchemy_multi_tenant.items import crud_items as crud
 from sqlalchemy_multi_tenant.items.adapters import ItemCreate, ItemUpdate
 from sqlalchemy_multi_tenant.items.models import Item
@@ -29,7 +28,7 @@ def test_item(dbsession, user) -> Generator[Item, None, None]:
 @pytest.fixture(autouse=True)
 def cleanup(dbsession):
     yield
-    dbsession.execute("DELETE from item")
+    dbsession.execute("DELETE from tenant_default.item")
     dbsession.commit()
 
 

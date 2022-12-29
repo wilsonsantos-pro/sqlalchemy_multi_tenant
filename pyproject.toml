@@ -15,6 +15,8 @@ passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 python-multipart = "^0.0.5"
 pydantic = { extras = ["email", "dotenv"], version = "^1.10.2" }
 python-dotenv = "^0.21.0"
+typeguard = "^2.13.3"
+psycopg2-binary = "^2.9.5"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.11.2"
@@ -25,6 +27,8 @@ httpx = "^0.23.1"
 pytest-watch = "^4.2.0"
 pytest-testmon = "^1.4.2"
 pytest-cov = "^4.0.0"
+rope = "^1.6.0"
+SQLAlchemy-Utils = "^0.39.0"
 
 [tool.isort]
 profile = "black"

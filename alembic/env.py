@@ -3,7 +3,7 @@ from __future__ import with_statement
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import MetaData, engine_from_config, pool
 
 from sqlalchemy_multi_tenant.config import settings
 
@@ -73,6 +73,19 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+    translated = MetaData()
+
+    def translate_schema(table, to_schema, constraint, referred_schema):
+        # pylint: disable=unused-argument
+        return to_schema
+
+    for table in target_metadata.tables.values():
+        table.to_metadata(
+            translated,
+            schema="tenant_default" if table.schema == "tenant" else table.schema,
+            referred_schema_fn=translate_schema,
+        )
+
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = get_url()
     connectable = engine_from_config(
@@ -83,7 +96,11 @@ def run_migrations_online():
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata, compare_type=True
+            connection=connection,
+            target_metadata=translated,
+            compare_type=True,
+            transaction_per_migration=True,
+            include_schemas=True,
         )
 
         with context.begin_transaction():
