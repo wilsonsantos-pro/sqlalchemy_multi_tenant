@@ -5,14 +5,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
+from sqlalchemy_multi_tenant.config import settings
+
 
 @lru_cache()
 def get_engine() -> Engine:
-    # pylint: disable=import-outside-toplevel
-    # local import so that settings can be overriden
-    from sqlalchemy_multi_tenant.config import settings
-
-    return create_engine(str(settings.SQLALCHEMY_DATABASE_URI), pool_pre_ping=True)
+    return create_engine(str(settings().SQLALCHEMY_DATABASE_URI), pool_pre_ping=True)
 
 
 @lru_cache()

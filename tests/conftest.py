@@ -8,8 +8,8 @@ from fastapi.testclient import TestClient
 from pydantic import EmailStr
 from sqlalchemy_utils import create_database, database_exists, drop_database
 
-from sqlalchemy_multi_tenant import config
 from sqlalchemy_multi_tenant.auth import create_access_token
+from sqlalchemy_multi_tenant.config import Settings, settings
 from sqlalchemy_multi_tenant.core.db.session import dbsession_ctx_for_tenant, get_engine
 from sqlalchemy_multi_tenant.core.orm.mapper import start_orm_mappers
 from sqlalchemy_multi_tenant.main import main
@@ -61,8 +61,12 @@ def test_init_db(test_database_exists) -> None:
         init_db(_dbsession)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def settings():
-    test_settings = config.Settings(_env_file=".env.test")
-    setattr(config, "settings", test_settings)
-    yield test_settings
+def pytest_sessionstart(
+    session: pytest.Session,  # pylint: disable=unused-argument
+) -> None:
+    Settings.Config.env_file = ".env.test"
+
+
+@pytest.fixture(name="settings", scope="session", autouse=True)
+def fixture_settings() -> Settings:
+    return settings()

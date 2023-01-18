@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy_multi_tenant.auth.exceptions import InvalidAccessToken
 from sqlalchemy_multi_tenant.auth.models import TokenPayload
 from sqlalchemy_multi_tenant.auth.token import decode_access_token
+from sqlalchemy_multi_tenant.config import settings
 from sqlalchemy_multi_tenant.core.db import dbsession_ctx_for_tenant
 from sqlalchemy_multi_tenant.tenant.crud_tenant import tenant as crud_tenant
 from sqlalchemy_multi_tenant.tenant.models import Tenant
@@ -35,10 +36,7 @@ def get_tenant_from_user_email(
     dbsession: Session = Depends(get_db_for_shared_schema),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> Tenant:
-    # pylint: disable=import-outside-toplevel
-    from sqlalchemy_multi_tenant.config import settings
-
-    if not settings.MULTI_TENANT_ENABLED:
+    if not settings().MULTI_TENANT_ENABLED:
         return Tenant(name="tenant_default", schema="tenant_default")
 
     user_email = form_data.username
@@ -53,9 +51,8 @@ def get_tenant_from_token(
     token_data: TokenPayload = Depends(get_token_payload),
 ) -> Tenant:
     # pylint: disable=import-outside-toplevel
-    from sqlalchemy_multi_tenant.config import settings
 
-    if not settings.MULTI_TENANT_ENABLED:
+    if not settings().MULTI_TENANT_ENABLED:
         return Tenant(name="tenant_default", schema="tenant_default")
 
     tenant_name = token_data.tnt

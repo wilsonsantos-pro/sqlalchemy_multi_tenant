@@ -1,4 +1,5 @@
 import secrets
+from functools import lru_cache
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, PostgresDsn, validator
@@ -6,6 +7,10 @@ from pydantic import AnyHttpUrl, BaseSettings, EmailStr, PostgresDsn, validator
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Multi Tenant"
+    POSTGRES_USER: Optional[str] = None
+    POSTGRES_PASSWORD: Optional[str] = None
+    POSTGRES_SERVER: Optional[str] = None
+    POSTGRES_DB: Optional[str] = None
     SQLALCHEMY_DATABASE_URI: Optional[Union[PostgresDsn, str]] = None
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     SECRET_KEY: str = secrets.token_urlsafe(32)
@@ -35,4 +40,6 @@ class Settings(BaseSettings):
         )
 
 
-settings = Settings()
+@lru_cache(maxsize=1)
+def settings() -> Settings:
+    return Settings()

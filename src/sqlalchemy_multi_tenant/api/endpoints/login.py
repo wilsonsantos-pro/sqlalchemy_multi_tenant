@@ -29,7 +29,7 @@ def login(
             raise HTTPException(status_code=400, detail="Incorrect email or password")
         if not user.is_active:
             raise HTTPException(status_code=400, detail="Inactive user")
-        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token_expires = timedelta(minutes=settings().ACCESS_TOKEN_EXPIRE_MINUTES)
         return {
             "access_token": auth.create_access_token(
                 user.email,

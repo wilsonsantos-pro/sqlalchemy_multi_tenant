@@ -3,9 +3,9 @@ version: '3'
 services:
   postgres:
     image: postgres:12
+    env_file:
+      - .env
     environment:
-      - POSTGRES_USER=wsp
-      - POSTGRES_PASSWORD=abc123
       - PGDATA=/pgtmpfs
     ports:
       - '54321:5432'
