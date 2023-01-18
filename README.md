@@ -1,7 +1,14 @@
+# Example implementing Multinancy with SQLAlchemy, PostgreSQL and FastAPI
 
+Simple TODO app.
 
-### curl examples
+### TODO
 
-```sh
-curl -XPOST -H 'Content-type: application/json' http://localhost:8000/api/login/ -d '{"username": "admin@admin.com", "password": "admin@admin.com"}' | jq .
-```
+- [x] Create basic app as single tenant
+- [x] Implement multi-schema as tenant separation strategy
+- [x] Alembic migrationss
+- [ ] add "tenant_default" to the "tenant" table using a migration
+- [ ] add custom types to shared (eg, enum)
+- [ ] CLI tool for adding tenants
+- [ ] Celery support
+- [ ] Multi-database support (hybrid with multi-schema)

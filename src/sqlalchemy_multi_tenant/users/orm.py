@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, Table
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Table
 
 from sqlalchemy_multi_tenant.core.orm.registry import mapper_registry
 
@@ -11,4 +11,5 @@ user = Table(
     Column("full_name", String(255)),
     Column("is_active", Boolean, nullable=False),
     Column("is_superuser", Boolean, nullable=False),
+    Column("time_expires", DateTime(timezone=True), nullable=True),
 )
